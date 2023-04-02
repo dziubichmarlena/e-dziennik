@@ -22,10 +22,10 @@ public class UserAuthenticationProvider {
     @Value("${security.jwt.token.secret-key:secret-key}")
     private String secretKey;
 
-    private final StudentService authenticationService;
+    private final StudentService studentService;
 
-    public UserAuthenticationProvider(StudentService authenticationService) {
-        this.authenticationService = authenticationService;
+    public UserAuthenticationProvider(StudentService studentService) {
+        this.studentService = studentService;
     }
 
     @PostConstruct
@@ -55,13 +55,13 @@ public class UserAuthenticationProvider {
 
         DecodedJWT decoded = verifier.verify(token);
 
-        Student student = authenticationService.findStudentByLogin(decoded.getIssuer());
+        Student student = studentService.findStudentByLogin(decoded.getIssuer());
 
         return new UsernamePasswordAuthenticationToken(student, null, Collections.emptyList());
     }
 
     public Authentication validateCredentials(LoginRequestDTO credentialsDto) {
-        Student student = authenticationService.findStudentByLogin(credentialsDto.getLogin());
+        Student student = studentService.findStudentByLogin(credentialsDto.getLogin());
         if (student == null || !student.getPassword().equals(credentialsDto.getPassword())) {
             throw new RuntimeException("Invalid credentials");
         }
