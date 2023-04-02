@@ -5,12 +5,13 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.edziennikbackend.dtos.LoginRequestDTO;
-import com.example.edziennikbackend.model.Student;
-import com.example.edziennikbackend.service.StudentService;
+import com.example.edziennikbackend.model.User;
+import com.example.edziennikbackend.service.UserService;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.Base64;
@@ -22,10 +23,10 @@ public class UserAuthenticationProvider {
     @Value("${security.jwt.token.secret-key:secret-key}")
     private String secretKey;
 
-    private final StudentService studentService;
+    private final UserService userService;
 
-    public UserAuthenticationProvider(StudentService studentService) {
-        this.studentService = studentService;
+    public UserAuthenticationProvider(UserService userService) {
+        this.userService = userService;
     }
 
     @PostConstruct
@@ -34,14 +35,14 @@ public class UserAuthenticationProvider {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 
-    public String createToken(Student student) {
+    public String createToken(User user) {
         Date now = new Date();
         Date validity = new Date(now.getTime() + 3600000); // 1 hour
 
         Algorithm algorithm = Algorithm.HMAC256(secretKey);
         return JWT.create()
-                .withClaim("role", student.getRole())
-                .withIssuer(student.getLogin())
+                .withClaim("role", user.getRole())
+                .withIssuer(user.getLogin())
                 .withIssuedAt(now)
                 .withExpiresAt(validity)
                 .sign(algorithm);
@@ -55,17 +56,19 @@ public class UserAuthenticationProvider {
 
         DecodedJWT decoded = verifier.verify(token);
 
-        Student student = studentService.findStudentByLogin(decoded.getIssuer());
+        User user = userService.findStudentByLogin(decoded.getIssuer());
 
-        return new UsernamePasswordAuthenticationToken(student, null, Collections.emptyList());
+        return new UsernamePasswordAuthenticationToken(user, null, Collections.emptyList());
     }
 
     public Authentication validateCredentials(LoginRequestDTO credentialsDto) {
-        Student student = studentService.findStudentByLogin(credentialsDto.getLogin());
-        if (student == null || !student.getPassword().equals(credentialsDto.getPassword())) {
+        User user = userService.findStudentByLogin(credentialsDto.getLogin());
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+          if (user == null || !encoder.matches(credentialsDto.getPassword(), user.getPassword())) {
             throw new RuntimeException("Invalid credentials");
         }
 
-        return new UsernamePasswordAuthenticationToken(student, null, Collections.emptyList());
+        return new UsernamePasswordAuthenticationToken(user, null, Collections.emptyList());
     }
 }

@@ -1,8 +1,8 @@
 package com.example.edziennikbackend.controller;
 
 
-import com.example.edziennikbackend.model.Student;
-import com.example.edziennikbackend.service.StudentService;
+import com.example.edziennikbackend.model.User;
+import com.example.edziennikbackend.service.UserService;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,14 +13,14 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:4200")
 public class StudentController {
 
-    private StudentService studentService;
+    private UserService userService;
 
-    public StudentController(StudentService studentService) {
-        this.studentService = studentService;
+    public StudentController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping("/students")
-    public List<Student> getAllStudents() {
-        return studentService.getAllStudents();
+    public List<User> getAllStudents() {
+        return userService.getAllStudents();
     }
 }
