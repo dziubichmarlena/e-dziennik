@@ -1,14 +1,15 @@
 package com.example.edziennikbackend.repo;
 
+import com.example.edziennikbackend.model.Mark;
 import com.example.edziennikbackend.model.Student;
-import com.example.edziennikbackend.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 
 @Repository
-public interface StudentRepo extends JpaRepository<Student, Long> {
+public interface MarkRepo extends JpaRepository<Mark, Long> {
 
-    Student findStudentByUser(User user);
-
+    List<Mark> findAllByStudent(Student student);
 }

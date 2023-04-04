@@ -10,18 +10,16 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class Student{
+public class Teacher {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String studentName;
-    private String studentSurname;
+    private String teacherName;
+    private String teacherSurname;
+    private String subject;
 
     @OneToOne
     User user;
 
-    @ManyToOne
-    @JoinColumn(name = "grade_id")
-    Grade grade;
 }

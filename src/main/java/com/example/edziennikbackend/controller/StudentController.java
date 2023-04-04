@@ -23,4 +23,5 @@ public class StudentController {
     public List<User> getAllStudents() {
         return userService.getAllStudents();
     }
+
 }
