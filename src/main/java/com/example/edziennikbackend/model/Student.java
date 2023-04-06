@@ -24,4 +24,5 @@ public class Student{
     @ManyToOne
     @JoinColumn(name = "grade_id")
     Grade grade;
+
 }

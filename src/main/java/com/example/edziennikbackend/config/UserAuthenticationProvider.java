@@ -55,13 +55,13 @@ public class UserAuthenticationProvider {
 
         DecodedJWT decoded = verifier.verify(token);
 
-        User user = userService.findStudentByLogin(decoded.getIssuer());
+        User user = userService.findUserByLogin(decoded.getIssuer());
 
         return new UsernamePasswordAuthenticationToken(user, null, Collections.emptyList());
     }
 
     public Authentication validateCredentials(LoginRequestDTO credentialsDto) {
-        User user = userService.findStudentByLogin(credentialsDto.getLogin());
+        User user = userService.findUserByLogin(credentialsDto.getLogin());
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
           if (user == null || !encoder.matches(credentialsDto.getPassword(), user.getPassword())) {

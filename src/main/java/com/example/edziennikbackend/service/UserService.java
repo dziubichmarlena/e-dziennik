@@ -24,11 +24,11 @@ public class UserService {
         studentRepo.save(student);*/
     }
 
-    public List<User> getAllStudents(){
+    public List<User> getAllUsers(){
         return userRepo.findAll();
     }
 
-    public User findStudentByLogin(String login){
+    public User findUserByLogin(String login){
         return userRepo.findUserByLogin(login);
     }
 

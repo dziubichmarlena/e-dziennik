@@ -31,7 +31,7 @@ public class MarkController {
     @GetMapping("/marks/{login}")
     public List<Mark> getAllMarksByLoggedStudent(@PathVariable String login) {
         System.out.println(login);
-        Student student = studentService.findStudentByUser(userService.findStudentByLogin(login));
+        Student student = studentService.findStudentByUser(userService.findUserByLogin(login));
         return markService.findAllMarksByStudent(student);
     }
 }
