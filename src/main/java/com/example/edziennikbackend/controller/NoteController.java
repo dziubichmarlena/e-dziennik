@@ -3,30 +3,29 @@ package com.example.edziennikbackend.controller;
 
 import com.example.edziennikbackend.dtos.NoteDTO;
 import com.example.edziennikbackend.model.Note;
+import com.example.edziennikbackend.model.Student;
+import com.example.edziennikbackend.model.Teacher;
 import com.example.edziennikbackend.service.NoteService;
 import com.example.edziennikbackend.service.StudentService;
+import com.example.edziennikbackend.service.TeacherService;
 import com.example.edziennikbackend.service.UserService;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.AllArgsConstructor;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
+@AllArgsConstructor
 public class NoteController {
 
     private NoteService noteService;
     private StudentService studentService;
     private UserService userService;
 
-    public NoteController(NoteService noteService, StudentService studentService, UserService userService) {
-        this.noteService = noteService;
-        this.studentService = studentService;
-        this.userService = userService;
-    }
+    private TeacherService teacherService;
+
 
     @GetMapping("/notes/{login}")
     public List<NoteDTO> getAllStudentNotes(@PathVariable String login) {
@@ -36,4 +35,14 @@ public class NoteController {
                         note.getNoteContent(), note.getDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")), note.isKindOfNote()))
                 .toList();
     }
+
+    @PostMapping("/note/{usernameTeacher}/{usernameStudent}")
+    public void addNote(@PathVariable("usernameTeacher") String usernameTeacher, @PathVariable("usernameStudent") String usernameStudent, @RequestBody Note note){
+        Teacher teacher = teacherService.findTeacherByUser(userService.findUserByLogin(usernameTeacher));
+        Student student = studentService.findStudentByUser(userService.findUserByLogin(usernameStudent));
+        note.setTeacher(teacher);
+        note.setStudent(student);
+        noteService.saveNote(note);
+    }
+
 }

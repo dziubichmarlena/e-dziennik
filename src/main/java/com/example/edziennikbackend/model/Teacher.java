@@ -21,6 +21,9 @@ public class Teacher implements Serializable {
     private String teacherName;
     private String teacherSurname;
     private String subject;
+    private String telephone;
+    private String classroom;
+    private String teacherInfo;
 
     @OneToOne
     User user;

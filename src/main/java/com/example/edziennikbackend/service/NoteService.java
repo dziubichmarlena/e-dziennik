@@ -20,4 +20,8 @@ public class NoteService {
     public List<Note> findAllNotesByStudent(Student student){
         return noteRepo.findAllByStudent(student);
     }
+
+    public void saveNote(Note note){
+        noteRepo.save(note);
+    }
 }
