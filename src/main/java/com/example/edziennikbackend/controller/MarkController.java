@@ -34,4 +34,6 @@ public class MarkController {
         Student student = studentService.findStudentByUser(userService.findUserByLogin(login));
         return markService.findAllMarksByStudent(student);
     }
+
+
 }

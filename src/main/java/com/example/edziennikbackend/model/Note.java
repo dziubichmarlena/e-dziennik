@@ -20,6 +20,7 @@ public class Note {
     private Long id;
     private String noteContent;
     private LocalDate date = LocalDate.now();
+    private boolean kindOfNote;
 
     @ManyToOne
     @JsonIgnore
@@ -28,4 +29,5 @@ public class Note {
     @ManyToOne
     @JsonIgnore
     Teacher teacher;
+
 }

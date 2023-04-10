@@ -5,14 +5,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
 @NoArgsConstructor
 @Getter
 @Setter
 @AllArgsConstructor
-public class NoteDTO {
-    private String teacher;
-    private String content;
-    private String date;
-    private boolean type;
+public class MarkDTO {
+
+    private String markNote;
+    private double markValue;
 }

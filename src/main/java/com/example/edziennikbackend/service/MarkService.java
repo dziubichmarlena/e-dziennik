@@ -2,6 +2,7 @@ package com.example.edziennikbackend.service;
 
 import com.example.edziennikbackend.model.Mark;
 import com.example.edziennikbackend.model.Student;
+import com.example.edziennikbackend.model.Teacher;
 import com.example.edziennikbackend.repo.MarkRepo;
 import org.springframework.stereotype.Service;
 
@@ -20,4 +21,7 @@ public class MarkService {
     public List<Mark> findAllMarksByStudent(Student student){
         return markRepo.findAllByStudent(student);
     }
+
+
+
 }

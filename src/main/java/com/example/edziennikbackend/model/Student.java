@@ -25,4 +25,5 @@ public class Student{
     @JoinColumn(name = "grade_id")
     Grade grade;
 
+
 }

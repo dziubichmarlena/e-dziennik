@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -31,12 +30,10 @@ public class NoteController {
 
     @GetMapping("/notes/{login}")
     public List<NoteDTO> getAllStudentNotes(@PathVariable String login) {
-        String pattern = "MM-dd-yyyy";
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
         List<Note> notes = noteService.findAllNotesByStudent(studentService.findStudentByUser(userService.findUserByLogin(login)));
         return notes.stream()
                 .map(note -> new NoteDTO(note.getTeacher().getTeacherName() + " " + note.getTeacher().getTeacherSurname(),
-                        note.getNoteContent(), note.getDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))))
+                        note.getNoteContent(), note.getDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")), note.isKindOfNote()))
                 .toList();
     }
 }

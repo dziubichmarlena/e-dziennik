@@ -1,14 +1,11 @@
 package com.example.edziennikbackend.repo;
 
-import com.example.edziennikbackend.model.Grade;
+import com.example.edziennikbackend.model.Teacher;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 
 @Repository
-public interface GradeRepo extends JpaRepository<Grade, Long> {
+public interface TeacherRepo extends JpaRepository<Teacher, Long> {
 
-    List<Grade> findAll();
 }
