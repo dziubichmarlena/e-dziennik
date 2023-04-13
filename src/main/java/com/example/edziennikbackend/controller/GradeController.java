@@ -21,7 +21,7 @@ public class GradeController {
 
     private TeacherService teacherService;
     private MarkService markService;
-    
+
 
     @GetMapping("/grades")
     public List<Grade> getAllGrades(){

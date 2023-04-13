@@ -5,11 +5,13 @@ import com.example.edziennikbackend.dtos.NoteDTO;
 import com.example.edziennikbackend.model.Note;
 import com.example.edziennikbackend.model.Student;
 import com.example.edziennikbackend.model.Teacher;
+import com.example.edziennikbackend.model.User;
 import com.example.edziennikbackend.service.NoteService;
 import com.example.edziennikbackend.service.StudentService;
 import com.example.edziennikbackend.service.TeacherService;
 import com.example.edziennikbackend.service.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.format.DateTimeFormatter;
@@ -27,9 +29,9 @@ public class NoteController {
     private TeacherService teacherService;
 
 
-    @GetMapping("/notes/{login}")
-    public List<NoteDTO> getAllStudentNotes(@PathVariable String login) {
-        List<Note> notes = noteService.findAllNotesByStudent(studentService.findStudentByUser(userService.findUserByLogin(login)));
+    @GetMapping("/notes")
+    public List<NoteDTO> getAllStudentNotes(@AuthenticationPrincipal User user) {
+        List<Note> notes = noteService.findAllNotesByStudent(studentService.findStudentByUser(userService.findUserByLogin(user.getLogin())));
         return notes.stream()
                 .map(note -> new NoteDTO(note.getTeacher().getTeacherName() + " " + note.getTeacher().getTeacherSurname(),
                         note.getNoteContent(), note.getDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")), note.isKindOfNote()))

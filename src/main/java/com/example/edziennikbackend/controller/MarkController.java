@@ -6,10 +6,12 @@ import com.example.edziennikbackend.dtos.TeacherDTO;
 import com.example.edziennikbackend.model.Mark;
 import com.example.edziennikbackend.model.Student;
 import com.example.edziennikbackend.model.Teacher;
+import com.example.edziennikbackend.model.User;
 import com.example.edziennikbackend.service.MarkService;
 import com.example.edziennikbackend.service.StudentService;
 import com.example.edziennikbackend.service.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,9 +37,9 @@ public class MarkController {
         return markService.findAllMarksByStudent(student);
     }
 
-    @GetMapping("/subjects/marks/{username}")
-    public List<TeacherDTO> getAllSubjectsByGrade(@PathVariable String username){
-        Student student = studentService.findStudentByUser(userService.findUserByLogin(username));
+    @GetMapping("/subjects/marks")
+    public List<TeacherDTO> getAllMarksByStudentDividedBySubjects(@AuthenticationPrincipal User user){
+        Student student = studentService.findStudentByUser(userService.findUserByLogin(user.getLogin()));
         List<Teacher> teachers = student.getGrade().getTeachers();
         return teachers.stream()
                 .map(teacher -> new TeacherDTO(teacher.getSubject(),
@@ -49,6 +51,5 @@ public class MarkController {
                 ))
                 .toList();
     }
-
 
 }
