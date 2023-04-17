@@ -1,6 +1,7 @@
 package com.example.edziennikbackend.service;
 
 import com.example.edziennikbackend.model.Mark;
+import com.example.edziennikbackend.model.Note;
 import com.example.edziennikbackend.model.Student;
 import com.example.edziennikbackend.model.Teacher;
 import com.example.edziennikbackend.repo.MarkRepo;
@@ -22,6 +23,9 @@ public class MarkService {
         return markRepo.findAllByStudent(student);
     }
 
+    public void saveMark(Mark mark){
+        markRepo.save(mark);
+    }
 
 
 }

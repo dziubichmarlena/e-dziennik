@@ -5,11 +5,13 @@ import com.example.edziennikbackend.dtos.NoteDTO;
 import com.example.edziennikbackend.model.Note;
 import com.example.edziennikbackend.model.Student;
 import com.example.edziennikbackend.model.Teacher;
+import com.example.edziennikbackend.model.User;
 import com.example.edziennikbackend.service.NoteService;
 import com.example.edziennikbackend.service.StudentService;
 import com.example.edziennikbackend.service.TeacherService;
 import com.example.edziennikbackend.service.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.format.DateTimeFormatter;
@@ -36,10 +38,10 @@ public class NoteController {
                 .toList();
     }
 
-    @PostMapping("/note/{usernameTeacher}/{usernameStudent}")
-    public void addNote(@PathVariable("usernameTeacher") String usernameTeacher, @PathVariable("usernameStudent") String usernameStudent, @RequestBody Note note){
-        Teacher teacher = teacherService.findTeacherByUser(userService.findUserByLogin(usernameTeacher));
-        Student student = studentService.findStudentByUser(userService.findUserByLogin(usernameStudent));
+    @PostMapping("/note/{id}")
+    public void saveNote(@AuthenticationPrincipal User user, @PathVariable("id") Long id, @RequestBody Note note){
+        Teacher teacher = teacherService.findTeacherByUser(user);
+        Student student = studentService.findStudentById(id);
         note.setTeacher(teacher);
         note.setStudent(student);
         noteService.saveNote(note);
