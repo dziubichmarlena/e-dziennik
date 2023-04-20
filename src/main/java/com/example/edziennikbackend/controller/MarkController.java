@@ -59,6 +59,24 @@ public class MarkController {
         mark.setStudent(student);
         markService.saveMark(mark);
     }
+    @GetMapping("/mark/teacher")
+    public List<MarkDTO> getMarksCreatedByTeacher(@AuthenticationPrincipal User user){
+        Teacher teacher = teacherService.findTeacherByUser(user);
+        List<Mark> marks = markService.findMarkByTeacherId(teacher.getId());
+        return marks.stream()
+                .map(mark-> new MarkDTO(mark.getMarkNote(),
+                        mark.getMarkValue(),
+                        mark.getId(),
+                        mark.getStudent().getStudentName()+" " + mark.getStudent().getStudentSurname(),
+                        mark.getTeacher().getTeacherName() + " " + mark.getTeacher().getTeacherSurname()))
+                .toList();
+
+    }
+
+    @DeleteMapping("/mark/teacher/{id}")
+    public void deleteMark(@PathVariable Long id){
+        markService.deleteMark(id);
+    }
 
 
 }

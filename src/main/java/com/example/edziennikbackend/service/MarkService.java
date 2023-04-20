@@ -26,6 +26,13 @@ public class MarkService {
     public void saveMark(Mark mark){
         markRepo.save(mark);
     }
+    public List<Mark> findMarkByTeacherId(Long id){
+        return markRepo.findMarkByTeacherId(id);
+    };
+    public void deleteMark(Long id){
+        markRepo.deleteById(id);
+    }
+
 
 
 }
