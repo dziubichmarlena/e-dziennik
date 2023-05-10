@@ -38,13 +38,31 @@ public class NoteController {
                 .toList();
     }
 
-    @PostMapping("/note/{usernameTeacher}/{usernameStudent}")
-    public void addNote(@PathVariable("usernameTeacher") String usernameTeacher, @PathVariable("usernameStudent") String usernameStudent, @RequestBody Note note){
-        Teacher teacher = teacherService.findTeacherByUser(userService.findUserByLogin(usernameTeacher));
-        Student student = studentService.findStudentByUser(userService.findUserByLogin(usernameStudent));
+    @PostMapping("/note/{id}")
+    public void saveNote(@AuthenticationPrincipal User user, @PathVariable("id") Long id, @RequestBody Note note){
+        Teacher teacher = teacherService.findTeacherByUser(user);
+        Student student = studentService.findStudentById(id);
         note.setTeacher(teacher);
         note.setStudent(student);
         noteService.saveNote(note);
+    }
+    @DeleteMapping("/note/{id}")
+    public void deleteNote(@PathVariable("id") Long id){
+        noteService.deleteNote(id);
+    }
+    @GetMapping("note/teacher")
+    public List <NoteDTO> getAllTeachersNote(@AuthenticationPrincipal User user){
+        Teacher teacher = teacherService.findTeacherByUser(user);
+        List<Note> notes = noteService.findNoteByTeacherId(teacher.getId());
+        return  notes.stream()
+                .map(note ->new NoteDTO(
+                        note.getId(),
+                        note.getTeacher().getTeacherName()+" "+ note.getTeacher().getTeacherSurname(),
+                        note.getStudent().getStudentName()+" " + note.getStudent().getStudentSurname(),
+                        note.getNoteContent(),
+                        note.getDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")),
+                        note.isKindOfNote()))
+                .toList();
     }
 
 }

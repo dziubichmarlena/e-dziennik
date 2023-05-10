@@ -9,6 +9,7 @@ import com.example.edziennikbackend.model.Teacher;
 import com.example.edziennikbackend.model.User;
 import com.example.edziennikbackend.service.MarkService;
 import com.example.edziennikbackend.service.StudentService;
+import com.example.edziennikbackend.service.TeacherService;
 import com.example.edziennikbackend.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,6 +31,7 @@ public class MarkController {
     private StudentService studentService;
 
     private UserService userService;
+    private TeacherService teacherService;
 
 
     @GetMapping("/marks/{login}")
@@ -50,6 +54,33 @@ public class MarkController {
                                 .toList()
                 ))
                 .toList();
+    }
+
+    @PostMapping("/subject/mark/{username}")
+    public void saveMark(@AuthenticationPrincipal User user, @PathVariable String username, @RequestBody Mark mark){
+        Student student = studentService.findStudentByUser(userService.findUserByLogin(username));
+        Teacher teacher = teacherService.findTeacherByUser(user);
+        mark.setTeacher(teacher);
+        mark.setStudent(student);
+        markService.saveMark(mark);
+    }
+    @GetMapping("/mark/teacher")
+    public List<MarkDTO> getMarksCreatedByTeacher(@AuthenticationPrincipal User user){
+        Teacher teacher = teacherService.findTeacherByUser(user);
+        List<Mark> marks = markService.findMarkByTeacherId(teacher.getId());
+        return marks.stream()
+                .map(mark-> new MarkDTO(mark.getMarkNote(),
+                        mark.getMarkValue(),
+                        mark.getId(),
+                        mark.getStudent().getStudentName()+" " + mark.getStudent().getStudentSurname(),
+                        mark.getTeacher().getTeacherName() + " " + mark.getTeacher().getTeacherSurname()))
+                .toList();
+
+    }
+
+    @DeleteMapping("/mark/teacher/{id}")
+    public void deleteMark(@PathVariable Long id){
+        markService.deleteMark(id);
     }
 
 }
