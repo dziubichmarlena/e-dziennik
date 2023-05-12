@@ -10,8 +10,13 @@ import lombok.Setter;
 @Setter
 public class GradeDTO {
     private Long id;
-
+    private String gradeName;
     public GradeDTO(Grade grade) {
         this.id = grade.getId();
+    }
+
+    public GradeDTO(Long id, String gradeName) {
+        this.id = id;
+        this.gradeName = gradeName;
     }
 }

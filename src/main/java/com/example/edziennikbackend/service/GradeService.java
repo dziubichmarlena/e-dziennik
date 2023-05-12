@@ -16,8 +16,14 @@ public class GradeService {
         this.gradeRepo = gradeRepo;
     }
 
-    public List<Grade> getAllGrades(){
-        return gradeRepo.findAll();
+    public List<Long> findGradesIdByTeacherId(Long teacherId) {
+        return gradeRepo.findGradesIdByTeacherId(teacherId);
     }
+    public List<Grade> findGradeById(List<Long> id){
+        return gradeRepo.findGradeById(id);
+    };
+
+
+
 
 }

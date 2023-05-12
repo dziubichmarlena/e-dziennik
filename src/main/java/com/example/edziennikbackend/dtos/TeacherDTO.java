@@ -21,6 +21,7 @@ public class TeacherDTO {
     private String classroom;
     private String teacherInfo;
     private List<MarkDTO> marks;
+    private List<GradeDTO> grade;
 
     public TeacherDTO(String subject, List<MarkDTO> marks) {
         this.subject = subject;
@@ -33,5 +34,9 @@ public class TeacherDTO {
         this.telephone = telephone;
         this.classroom = classroom;
         this.teacherInfo = teacherInfo;
+    }
+
+    public TeacherDTO(List<GradeDTO> grade) {
+        this.grade = grade;
     }
 }

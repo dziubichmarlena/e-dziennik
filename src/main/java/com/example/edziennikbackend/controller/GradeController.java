@@ -1,8 +1,11 @@
 package com.example.edziennikbackend.controller;
 
 
+import com.example.edziennikbackend.dtos.GradeDTO;
+import com.example.edziennikbackend.dtos.MarkDTO;
 import com.example.edziennikbackend.model.Grade;
 import com.example.edziennikbackend.model.Student;
+import com.example.edziennikbackend.model.Teacher;
 import com.example.edziennikbackend.model.User;
 import com.example.edziennikbackend.service.*;
 import lombok.AllArgsConstructor;
@@ -28,8 +31,14 @@ public class GradeController {
     
 
     @GetMapping("/grades")
-    public List<Grade> getAllGrades(){
-        return gradeService.getAllGrades();
+    public List<GradeDTO> getAllGrades(@AuthenticationPrincipal User user){
+       Teacher teacher= teacherService.findTeacherByUser(user);
+       List<Long>gradeId = gradeService.findGradesIdByTeacherId(teacher.getId());
+       List<Grade> grades = gradeService.findGradeById(gradeId);
+       return grades.stream()
+               .map(grade -> new GradeDTO(grade.getId(),grade.getGradeName()))
+               .toList();
+
     }
 
 
